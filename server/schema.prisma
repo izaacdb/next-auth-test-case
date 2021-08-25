@@ -1,0 +1,275 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["filterJson"]
+  output   = "../shared/prisma"
+}
+
+//generator typegraphql {
+//  provider = "typegraphql-prisma"
+//  output   = "./src/typegraphql"
+//}
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("session")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("user")
+}
+
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+  @@map("verification_request")
+}
+
+model Category {
+  id    String @id
+  value String
+  skus  Sku[]
+
+  @@map("category")
+}
+
+model Country {
+  id    String @id
+  value String
+  skus  Sku[]
+
+  @@map("country")
+}
+
+model Finish {
+  id    String @id
+  value String
+  skus  Sku[]
+
+  @@map("finish")
+}
+
+model Legs {
+  id    String @id
+  value String
+  skus  Sku[]
+
+  @@map("legs")
+}
+
+model Order {
+  id              Int                 @id
+  linnworksId     String
+  receivedDate    DateTime            @db.Timestamp(6)
+  deliveryDate    DateTime            @db.Timestamp(6)
+  manufactureDate DateTime            @db.Timestamp(6)
+  dispatchDate    DateTime            @db.Timestamp(6)
+  boxQuantity     Int
+  deliveryService DeliveryServiceEnum @default(TBC)
+  status          StatusEnum          @default(NOT_STARTED)
+  comment         String              @default("")
+  source          SourceEnum          @default(STAGING)
+  orderSkus       OrderSku[]
+
+  @@map("order")
+}
+
+model OrderSku {
+  id                 String              @id
+  status             StatusEnum          @default(NOT_STARTED)
+  comment            String              @default("")
+  quantity           Int
+  orderId            Int // relation scalar field
+  order              Order               @relation(fields: [orderId], references: [id])
+  skuId              String // relation scalar field
+  sku                Sku                 @relation(fields: [skuId], references: [id])
+  orderSkuComponents OrderSkuComponent[]
+
+  @@map("order_sku")
+}
+
+model OrderSkuComponent {
+  id              String     @id
+  status          StatusEnum @default(NOT_STARTED)
+  comment         String     @default("")
+  bayNo           String     @default("")
+  stageStatuses   Json       @default("[{\"id\": 1, \"status\": \"NOT_STARTED\"}, {\"id\": 2, \"status\": \"NOT_STARTED\"}, {\"id\": 3, \"status\": \"NOT_STARTED\"}, {\"id\": 4, \"status\": \"NOT_STARTED\"}, {\"id\": 5, \"status\": \"NOT_STARTED\"}, {\"id\": 6, \"status\": \"NOT_STARTED\"}, {\"id\": 7, \"status\": \"NOT_STARTED\"}, {\"id\": 8, \"status\": \"NOT_STARTED\"}, {\"id\": 9, \"status\": \"NOT_STARTED\"}, {\"id\": 10, \"status\": \"NOT_STARTED\"}, {\"id\": 11, \"status\": \"NOT_STARTED\"}, {\"id\": 12, \"status\": \"NOT_STARTED\"}, {\"id\": 13, \"status\": \"NOT_STARTED\"}, {\"id\": 14, \"status\": \"NOT_STARTED\"}, {\"id\": 15, \"status\": \"NOT_STARTED\"}, {\"id\": 16, \"status\": \"NOT_STARTED\"}, {\"id\": 17, \"status\": \"NOT_STARTED\"}, {\"id\": 18, \"status\": \"NOT_STARTED\"}, {\"id\": 19, \"status\": \"NOT_STARTED\"}, {\"id\": 20, \"status\": \"NOT_STARTED\"}, {\"id\": 21, \"status\": \"NOT_STARTED\"}, {\"id\": 22, \"status\": \"NOT_STARTED\"}, {\"id\": 23, \"status\": \"NOT_STARTED\"}, {\"id\": 24, \"status\": \"NOT_STARTED\"}, {\"id\": 25, \"status\": \"NOT_STARTED\"}, {\"id\": 26, \"status\": \"NOT_STARTED\"}, {\"id\": 27, \"status\": \"NOT_STARTED\"}, {\"id\": 28, \"status\": \"NOT_STARTED\"}, {\"id\": 29, \"status\": \"NOT_STARTED\"}, {\"id\": 30, \"status\": \"NOT_STARTED\"}, {\"id\": 31, \"status\": \"NOT_STARTED\"}, {\"id\": 32, \"status\": \"NOT_STARTED\"}, {\"id\": 33, \"status\": \"NOT_STARTED\"}, {\"id\": 34, \"status\": \"NOT_STARTED\"}, {\"id\": 35, \"status\": \"NOT_STARTED\"}, {\"id\": 36, \"status\": \"NOT_STARTED\"}, {\"id\": 37, \"status\": \"NOT_STARTED\"}, {\"id\": 38, \"status\": \"NOT_STARTED\"}, {\"id\": 39, \"status\": \"NOT_STARTED\"}, {\"id\": 40, \"status\": \"NOT_STARTED\"}, {\"id\": 41, \"status\": \"NOT_STARTED\"}, {\"id\": 42, \"status\": \"NOT_STARTED\"}, {\"id\": 43, \"status\": \"NOT_STARTED\"}, {\"id\": 44, \"status\": \"NOT_STARTED\"}, {\"id\": 45, \"status\": \"NOT_STARTED\"}, {\"id\": 46, \"status\": \"NOT_STARTED\"}, {\"id\": 47, \"status\": \"NOT_STARTED\"}, {\"id\": 48, \"status\": \"NOT_STARTED\"}, {\"id\": 49, \"status\": \"NOT_STARTED\"}, {\"id\": 50, \"status\": \"NOT_STARTED\"}]")
+  orderSkuId      String
+  orderSku        OrderSku   @relation(fields: [orderSkuId], references: [id])
+  componentId     String
+  component       Component  @relation(fields: [componentId], references: [id])
+  boxSize         String
+  boxNumber       Int
+  quantity        Int
+
+  @@map("order_sku_component")
+}
+
+model Product {
+  id    String @id
+  value String
+  skus  Sku[]
+
+  @@map("product")
+}
+
+model Size {
+  id    String @id
+  value String
+  skus  Sku[]
+
+  @@map("size")
+}
+
+model Sku {
+  id          String           @id
+  country     Country          @relation(fields: [countryId], references: [id])
+  countryId   String
+  category    Category         @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  product     Product          @relation(fields: [productId], references: [id])
+  productId   String
+  size        Size             @relation(fields: [sizeId], references: [id])
+  sizeId      String
+  finish      Finish           @relation(fields: [finishId], references: [id])
+  finishId    String
+  legs        Legs             @relation(fields: [legsId], references: [id])
+  legsId      String
+  boxQuantity Int
+  orderSkus   OrderSku[]
+  components  SkuToComponent[]
+
+  @@map("sku")
+}
+
+model SkuToComponent {
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id])
+  skuId       String
+  sku         Sku       @relation(fields: [skuId], references: [id])
+  boxSize     String
+  boxNumber   Int
+  quantity    Int
+
+  @@id([skuId, componentId])
+  @@map("sku_to_component")
+}
+
+model ComponentType {
+  id         Int         @id @default(autoincrement())
+  value      String
+  components Component[]
+
+  @@map("component_type")
+}
+
+model Component {
+  id                 String              @id
+  name               String
+  length             Int
+  width              Int
+  depth              Int
+  weight             Int
+  stages             Json                @default("[{\"id\": 1, \"timing\": null, \"enabled\": true}, {\"id\": 2, \"timing\": null, \"enabled\": true}, {\"id\": 3, \"timing\": null, \"enabled\": true}, {\"id\": 4, \"timing\": null, \"enabled\": true}, {\"id\": 5, \"timing\": null, \"enabled\": true}, {\"id\": 6, \"timing\": null, \"enabled\": true}, {\"id\": 7, \"timing\": null, \"enabled\": true}, {\"id\": 8, \"timing\": null, \"enabled\": true}, {\"id\": 9, \"timing\": null, \"enabled\": true}, {\"id\": 10, \"timing\": null, \"enabled\": true}, {\"id\": 11, \"timing\": null, \"enabled\": true}, {\"id\": 12, \"timing\": null, \"enabled\": true}, {\"id\": 13, \"timing\": null, \"enabled\": true}, {\"id\": 14, \"timing\": null, \"enabled\": true}, {\"id\": 15, \"timing\": null, \"enabled\": false}, {\"id\": 16, \"timing\": null, \"enabled\": false}, {\"id\": 17, \"timing\": null, \"enabled\": false}, {\"id\": 18, \"timing\": null, \"enabled\": false}, {\"id\": 19, \"timing\": null, \"enabled\": false}, {\"id\": 20, \"timing\": null, \"enabled\": false}, {\"id\": 21, \"timing\": null, \"enabled\": false}, {\"id\": 22, \"timing\": null, \"enabled\": false}, {\"id\": 23, \"timing\": null, \"enabled\": false}, {\"id\": 24, \"timing\": null, \"enabled\": false}, {\"id\": 25, \"timing\": null, \"enabled\": false}, {\"id\": 26, \"timing\": null, \"enabled\": false}, {\"id\": 27, \"timing\": null, \"enabled\": false}, {\"id\": 28, \"timing\": null, \"enabled\": false}, {\"id\": 29, \"timing\": null, \"enabled\": false}, {\"id\": 30, \"timing\": null, \"enabled\": false}, {\"id\": 31, \"timing\": null, \"enabled\": false}, {\"id\": 32, \"timing\": null, \"enabled\": false}, {\"id\": 33, \"timing\": null, \"enabled\": false}, {\"id\": 34, \"timing\": null, \"enabled\": false}, {\"id\": 35, \"timing\": null, \"enabled\": false}, {\"id\": 36, \"timing\": null, \"enabled\": false}, {\"id\": 37, \"timing\": null, \"enabled\": false}, {\"id\": 38, \"timing\": null, \"enabled\": false}, {\"id\": 39, \"timing\": null, \"enabled\": false}, {\"id\": 40, \"timing\": null, \"enabled\": false}, {\"id\": 41, \"timing\": null, \"enabled\": false}, {\"id\": 42, \"timing\": null, \"enabled\": false}, {\"id\": 43, \"timing\": null, \"enabled\": false}, {\"id\": 44, \"timing\": null, \"enabled\": false}, {\"id\": 45, \"timing\": null, \"enabled\": false}, {\"id\": 46, \"timing\": null, \"enabled\": false}, {\"id\": 47, \"timing\": null, \"enabled\": false}, {\"id\": 48, \"timing\": null, \"enabled\": false}, {\"id\": 49, \"timing\": null, \"enabled\": false}, {\"id\": 50, \"timing\": null, \"enabled\": false}]")
+  orderSkuComponents OrderSkuComponent[]
+  skus               SkuToComponent[]
+  parentId           String?
+  parentComponent    Component?          @relation("ComponentFamilyTree", fields: [parentId], references: [id])
+  childComponent     Component?          @relation("ComponentFamilyTree")
+  inherit            Boolean
+  typeId             Int
+  type               ComponentType       @relation(fields: [typeId], references: [id])
+
+  @@map("component")
+}
+
+model Stage {
+  id      Int     @id
+  label   String
+  order   Int
+  enabled Boolean
+  barn    String
+
+  @@map("stage")
+}
+
+enum DeliveryServiceEnum {
+  GLB
+  GLB_A
+  FED_EX_INT
+  FED_EX_UK
+  WAY
+  COL
+  UPS
+  XDP
+  PAN
+  TUF
+  TBC
+  ROY
+  ERR
+}
+
+enum StatusEnum {
+  NOT_STARTED
+  STARTED
+  COMPLETED
+  PROBLEM
+  STOPPED
+  CANCELLED
+  DISABLED
+}
+
+enum SourceEnum {
+  ETSY
+  OPENCART
+  WAYFAIR
+  EBAY
+  STAGING
+  GLB_UK
+  GLB_USA
+}

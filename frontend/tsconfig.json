@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSourceMap": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": [
+      "DOM",
+      "ES2020"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist/",
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "target": "ES6",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
+}

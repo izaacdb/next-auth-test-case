@@ -1,0 +1,22 @@
+{
+	"name": "test-case",
+	"version": "2.0.0",
+	"private": true,
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^4.28.3",
+		"@typescript-eslint/parser": "^4.28.3",
+		"eslint": "^7.30.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.3.1",
+		"eslint-plugin-react": "^7.23.2",
+		"eslint-plugin-react-hooks": "^4.2.0",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"prettier": "^2.3.2",
+		"typescript": "^4.3.5"
+	},
+	"main": "index.js",
+	"license": "MIT",
+	"dependencies": {
+		"@types/node": "^16.4.12"
+	}
+}

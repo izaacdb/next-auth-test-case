@@ -1,0 +1,14 @@
+node_modules/
+.coverage/
+dist/
+build/
+.next/
+functions/
+.idea
+.idea/
+.idea/*
+yarn-error.log
+out
+.env
+logs
+server/logs

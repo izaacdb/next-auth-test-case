@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    "extendedDiagnostics": false,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSourceMap": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": [
+      "ES2020"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "outDir": "./dist/",
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "target": "ES2020",
+    "baseUrl": ".",
+  },
+  "watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": [
+      "**/node_modules",
+      "dist",
+      "coverage",
+      "src/__data__"
+    ],
+    "excludeFiles": []
+  },
+  "exclude": [
+    "node_modules",
+    "./shared/prisma"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}
